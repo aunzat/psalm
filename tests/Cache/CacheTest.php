@@ -307,5 +307,51 @@ class CacheTest extends TestCase
                 ],
             ],
         ];
+        yield 'deletedLines' => [
+            [
+                [
+                    'files' => [
+                        'src/A.php' => <<<'PHP'
+                            <?php
+                            class A {
+                                public function foo(): int
+                                {
+                                    //
+                                    //
+                                    return 'a';
+                                }
+                                public function bar(): void
+                                {
+                                }
+                            }
+                            PHP,
+                    ],
+                    'issues' => [
+                        'src/A.php' => [
+                            'InvalidReturnStatement: The inferred type \'\'a\'\' does not match the declared return type \'int\' for A::foo',
+                            'InvalidReturnType: The declared return type \'int\' for A::foo is incorrect, got \'\'a\'\'',
+                        ],
+                    ],
+                ],
+                [
+                    'files' => [
+                        'src/A.php' => <<<'PHP'
+                            <?php
+                            class A
+                            {
+                                public function foo(): int
+                                {
+                                    return 1;
+                                }
+                                public function bar(): void
+                                {
+                                }
+                            }
+                            PHP,
+                    ],
+                    'issues' => [],
+                ],
+            ],
+        ];
     }
 }
